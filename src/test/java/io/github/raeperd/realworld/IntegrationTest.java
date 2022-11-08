@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 class IntegrationTest {
+    private static final String CONTEXT_PATH = "";
 
     @Autowired
     private MockMvc mockMvc;
@@ -40,7 +41,7 @@ class IntegrationTest {
     @Order(1)
     @Test
     void auth_register() throws Exception {
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post(CONTEXT_PATH + "/users")
                 .contentType(APPLICATION_JSON)
                 .content(format("{\"user\":{\"email\":\"%s\", \"password\":\"%s\", \"username\":\"%s\"}}", EMAIL, PASSWORD, USERNAME)))
                 .andExpect(status().isOk())
@@ -50,7 +51,7 @@ class IntegrationTest {
     @Order(2)
     @Test
     void auth_login() throws Exception {
-        mockMvc.perform(post("/users/login")
+        mockMvc.perform(post(CONTEXT_PATH + "/users/login")
                 .contentType(APPLICATION_JSON)
                 .content(format("{\"user\":{\"email\":\"%s\", \"password\":\"%s\"}}", EMAIL, PASSWORD)))
                 .andExpect(status().isOk())
@@ -60,7 +61,7 @@ class IntegrationTest {
     @Order(3)
     @Test
     void auth_login_and_remember_token() throws Exception{
-        final var contentAsString = mockMvc.perform(post("/users/login")
+        final var contentAsString = mockMvc.perform(post(CONTEXT_PATH + "/users/login")
                 .contentType(APPLICATION_JSON)
                 .content(format("{\"user\":{\"email\":\"%s\", \"password\":\"%s\"}}", EMAIL, PASSWORD)))
                 .andExpect(status().isOk())
@@ -73,7 +74,7 @@ class IntegrationTest {
     @Order(4)
     @Test
     void auth_current_user() throws Exception {
-        mockMvc.perform(get("/user")
+        mockMvc.perform(get(CONTEXT_PATH + "/user")
                 .header(AUTHORIZATION, "Token " + token))
                 .andExpect(status().isOk())
                 .andExpect(validUserModel());
@@ -82,7 +83,7 @@ class IntegrationTest {
     @Order(5)
     @Test
     void auth_update_user() throws Exception {
-        mockMvc.perform(put("/user")
+        mockMvc.perform(put(CONTEXT_PATH + "/user")
                 .header(AUTHORIZATION, "Token " + token)
                 .contentType(APPLICATION_JSON)
                 .content(format("{\"user\":{\"email\":\"%s\"}}", EMAIL)))
@@ -93,7 +94,7 @@ class IntegrationTest {
     @Order(6)
     @Test
     void profiles_register_celeb() throws Exception {
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post(CONTEXT_PATH + "/users")
                 .contentType(APPLICATION_JSON)
                 .content(format("{\"user\":{\"email\":\"%s\", \"password\":\"%s\", \"username\":\"%s\"}}", CELEB_EMAIL, PASSWORD, CELEB_USERNAME)))
                 .andExpect(status().isOk())
@@ -103,12 +104,12 @@ class IntegrationTest {
     @Order(7)
     @Test
     void profiles_profile() throws Exception {
-        mockMvc.perform(get("/profiles/{celeb_username}", CELEB_USERNAME)
+        mockMvc.perform(get(CONTEXT_PATH + "/profiles/{celeb_username}", CELEB_USERNAME)
                 .header(AUTHORIZATION, "Token " + token))
                 .andExpect(status().isOk())
                 .andExpect(validProfileModel());
 
-        mockMvc.perform(get("/profiles/{celeb_username}", CELEB_USERNAME))
+        mockMvc.perform(get(CONTEXT_PATH + "/profiles/{celeb_username}", CELEB_USERNAME))
                 .andExpect(status().isOk())
                 .andExpect(validProfileModel());
     }
@@ -116,7 +117,7 @@ class IntegrationTest {
     @Order(8)
     @Test
     void follow_profile() throws Exception {
-        mockMvc.perform(post("/profiles/{celeb_username}/follow", CELEB_USERNAME)
+        mockMvc.perform(post(CONTEXT_PATH + "/profiles/{celeb_username}/follow", CELEB_USERNAME)
                 .header(AUTHORIZATION, "Token " + token))
                 .andExpect(status().isOk())
                 .andExpect(validProfileModel())
@@ -126,7 +127,7 @@ class IntegrationTest {
     @Order(9)
     @Test
     void unfollow_profile() throws Exception {
-        mockMvc.perform(delete("/profiles/{celeb_username}/follow", CELEB_USERNAME)
+        mockMvc.perform(delete(CONTEXT_PATH + "/profiles/{celeb_username}/follow", CELEB_USERNAME)
                 .header(AUTHORIZATION, "Token " + token))
                 .andExpect(status().isOk())
                 .andExpect(validProfileModel())
@@ -136,7 +137,7 @@ class IntegrationTest {
     @Order(10)
     @Test
     void create_article() throws Exception {
-        mockMvc.perform(post("/articles")
+        mockMvc.perform(post(CONTEXT_PATH + "/articles")
                 .header(AUTHORIZATION, "Token " + token)
                 .contentType(APPLICATION_JSON)
                 .content("{\n" +
@@ -157,7 +158,7 @@ class IntegrationTest {
     @Order(11)
     @Test
     void get_all_articles() throws Exception {
-        mockMvc.perform(get("/articles?limit=20&offset=0")
+        mockMvc.perform(get(CONTEXT_PATH + "/articles?limit=20&offset=0")
                 .header(AUTHORIZATION, "Token " + token))
                 .andExpect(status().isOk())
                 .andExpect(validMultipleArticleModel());
@@ -166,7 +167,7 @@ class IntegrationTest {
     @Order(11)
     @Test
     void get_all_articles_without_auth() throws Exception {
-        mockMvc.perform(get("/articles?limit=20&offset=0"))
+        mockMvc.perform(get(CONTEXT_PATH + "/articles?limit=20&offset=0"))
                 .andExpect(status().isOk())
                 .andExpect(validMultipleArticleModel());
     }
@@ -174,7 +175,7 @@ class IntegrationTest {
     @Order(11)
     @Test
     void get_all_articles_with_author() throws Exception {
-        mockMvc.perform(get("/articles")
+        mockMvc.perform(get(CONTEXT_PATH + "/articles")
                 .queryParam("author", USERNAME)
                 .header(AUTHORIZATION, "Token " + token))
                 .andExpect(status().isOk())
@@ -184,7 +185,7 @@ class IntegrationTest {
     @Order(11)
     @Test
     void get_all_articles_with_tag() throws Exception {
-        mockMvc.perform(get("/articles")
+        mockMvc.perform(get(CONTEXT_PATH + "/articles")
                 .queryParam("tag", "dragons")
                 .header(AUTHORIZATION, "Token " + token))
                 .andExpect(status().isOk())
@@ -194,7 +195,7 @@ class IntegrationTest {
     @Order(11)
     @Test
     void get_single_article_by_slug() throws Exception {
-        mockMvc.perform(get("/articles/{slug}", "how-to-train-your-dragon"))
+        mockMvc.perform(get(CONTEXT_PATH + "/articles/{slug}", "how-to-train-your-dragon"))
                 .andExpect(status().isOk())
                 .andExpect(validSingleArticleModel());
     }
@@ -202,7 +203,7 @@ class IntegrationTest {
     @Order(11)
     @Test
     void put_article() throws Exception {
-        mockMvc.perform(put("/articles/{slug}", "how-to-train-your-dragon")
+        mockMvc.perform(put(CONTEXT_PATH + "/articles/{slug}", "how-to-train-your-dragon")
                 .header(AUTHORIZATION, "Token " + token)
                 .contentType(APPLICATION_JSON)
                 .content("{\"article\":{\"body\":\"With two hands\"}}"))
@@ -214,7 +215,7 @@ class IntegrationTest {
     @Order(11)
     @Test
     void create_comments_for_article() throws Exception {
-        final var contentAsString = mockMvc.perform(post("/articles/{slug}/comments", "how-to-train-your-dragon")
+        final var contentAsString = mockMvc.perform(post(CONTEXT_PATH + "/articles/{slug}/comments", "how-to-train-your-dragon")
                 .header(AUTHORIZATION, "Token " + token)
                 .contentType(APPLICATION_JSON)
                 .content("{\"comment\":{\"body\":\"Thank you so much!\"}}"))
@@ -229,7 +230,7 @@ class IntegrationTest {
     @Order(12)
     @Test
     void all_comments_for_article() throws Exception {
-        mockMvc.perform(get("/articles/{slug}/comments", "how-to-train-your-dragon")
+        mockMvc.perform(get(CONTEXT_PATH + "/articles/{slug}/comments", "how-to-train-your-dragon")
                 .header(AUTHORIZATION, "Token " + token))
                 .andExpect(status().isOk())
                 .andExpect(validMultipleCommentModel());
@@ -238,7 +239,7 @@ class IntegrationTest {
     @Order(13)
     @Test
     void delete_comment_for_article() throws Exception {
-        mockMvc.perform(delete("/articles/{slug}/comments/{id}", "how-to-train-your-dragon", commentId)
+        mockMvc.perform(delete(CONTEXT_PATH + "/articles/{slug}/comments/{id}", "how-to-train-your-dragon", commentId)
                 .header(AUTHORIZATION, "Token " + token))
                 .andExpect(status().isOk());
     }
@@ -246,7 +247,7 @@ class IntegrationTest {
     @Order(12)
     @Test
     void post_favorite_article() throws Exception {
-        mockMvc.perform(post("/articles/{slug}/favorite", "how-to-train-your-dragon")
+        mockMvc.perform(post(CONTEXT_PATH + "/articles/{slug}/favorite", "how-to-train-your-dragon")
                 .header(AUTHORIZATION, "Token " + token))
                 .andExpect(status().isOk())
                 .andExpect(validSingleArticleModel());
@@ -255,7 +256,7 @@ class IntegrationTest {
     @Order(13)
     @Test
     void get_articles_favorited_by_username() throws Exception {
-        mockMvc.perform(get("/articles?favorited={username}", USERNAME)
+        mockMvc.perform(get(CONTEXT_PATH + "/articles?favorited={username}", USERNAME)
                 .header(AUTHORIZATION, "Token " + token))
                 .andExpect(status().isOk())
                 .andExpect(validMultipleArticleModel())
@@ -265,7 +266,7 @@ class IntegrationTest {
     @Order(13)
     @Test
     void get_articles_favorited_by_username_not_exists() throws Exception {
-        mockMvc.perform(get("/articles?favorited={username}", "jane")
+        mockMvc.perform(get(CONTEXT_PATH + "/articles?favorited={username}", "jane")
                 .header(AUTHORIZATION, "Token " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("articles").isEmpty())
@@ -275,7 +276,7 @@ class IntegrationTest {
     @Order(13)
     @Test
     void get_feed() throws Exception {
-        mockMvc.perform(get("/articles/feed")
+        mockMvc.perform(get(CONTEXT_PATH + "/articles/feed")
                 .header(AUTHORIZATION, "Token " + token))
                 .andExpect(status().isOk())
                 .andExpect(validMultipleArticleModel())
@@ -285,7 +286,7 @@ class IntegrationTest {
     @Order(14)
     @Test
     void unfavorite_article() throws Exception {
-        mockMvc.perform(delete("/articles/{slug}/favorite", "how-to-train-your-dragon")
+        mockMvc.perform(delete(CONTEXT_PATH + "/articles/{slug}/favorite", "how-to-train-your-dragon")
                 .header(AUTHORIZATION, "Token " + token))
                 .andExpect(status().isOk())
                 .andExpect(validSingleArticleModel())
@@ -295,7 +296,7 @@ class IntegrationTest {
     @Order(15)
     @Test
     void delete_article() throws Exception {
-        mockMvc.perform(delete("/articles/{slug}", "how-to-train-your-dragon")
+        mockMvc.perform(delete(CONTEXT_PATH + "/articles/{slug}", "how-to-train-your-dragon")
                 .header(AUTHORIZATION, "Token " + token))
                 .andExpect(status().isNoContent());
     }

@@ -63,7 +63,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter implemen
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedMethods("GET", "HEAD", "POST", "DELETE", "PUT")
-                .allowedOrigins(properties.getAllowedOrigins().toArray(new String[0]))
+                //.allowedOrigins(properties.getAllowedOrigins().toArray(new String[0]))
+                .allowedOriginPatterns("*")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
