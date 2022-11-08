@@ -1,0 +1,25 @@
+@token = Token eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOjEsIm5hbWUiOiJ0ZXN0QHJlY29sbGVjdGl2ZS5jb20iLCJpYXQiOjE2Njc5MzMzOTJ9.oDmTcoGIYC0cT41YEmcyXxCnCGCfa79G56yTQz2vzE4
+@cookie = JSESSIONID=5151E6B9DD156CDBD5E918C17B7DB069; codespaces_correlation_id=e536be2851bfb6445882a64954bfefeb
+
+-- This works already
+GET https://ramiuscorp-realworld-springboot-java-qj9jx6vv4p7c99jw-8080.preview.app.github.dev/articles HTTP/1.1
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: {{token}}
+Cookie: {{cookie}}
+
+
+-- This needs to be implemented
+GET https://ramiuscorp-realworld-springboot-java-qj9jx6vv4p7c99jw-8080.preview.app.github.dev/articles?since=2022-11-05 HTTP/1.1
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: {{token}}
+Cookie: {{cookie}}
+
+
+-- This can request also works
+GET https://ramiuscorp-realworld-springboot-java-qj9jx6vv4p7c99jw-8080.preview.app.github.dev/articles?author=recuser HTTP/1.1
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: {{token}}
+Cookie: {{cookie}}
