@@ -18,7 +18,7 @@ Authorization: {{token}}
 Cookie: {{cookie}}
 
 
--- This can request also works
+-- This request also works already
 GET https://{{host}}/articles?author=recuser HTTP/1.1
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
