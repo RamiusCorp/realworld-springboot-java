@@ -6,6 +6,8 @@ import io.github.raeperd.realworld.domain.user.UserName;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.*;
+import org.springframework.data.jpa.repository.*;
 
 import java.time.*;
 import java.time.format.*;
